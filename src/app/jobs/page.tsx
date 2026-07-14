@@ -160,15 +160,16 @@ export default function JobTrackerPage() {
       )}
 
       {/* Kanban Board */}
-      <div className="flex-1 flex gap-4 overflow-x-auto pb-2">
+      <div className="flex-1 flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
         {COLUMNS.map((col) => {
           const colJobs = filtered.filter((j) => j.column === col.id);
           return (
             <div
               key={col.id}
-              className="flex-shrink-0 flex flex-col rounded-xl overflow-hidden"
+              className="flex-shrink-0 flex flex-col rounded-xl overflow-hidden snap-start"
               style={{
-                width: "260px",
+                width: "280px",
+                minWidth: "280px",
                 background: "var(--surface-1)",
                 border: "1px solid var(--border)",
               }}

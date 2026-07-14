@@ -253,12 +253,13 @@ export default function CalendarPage() {
       )}
 
       {/* Calendar Grid */}
-      <div className="flex-1 flex flex-col overflow-hidden glass-card rounded-xl">
-        {/* Days of week header */}
-        <div
-          className="grid grid-cols-7 border-b"
-          style={{ background: "var(--ds-surface-2)", borderColor: "var(--ds-border)" }}
-        >
+      <div className="flex-1 flex flex-col overflow-x-auto glass-card rounded-xl">
+        <div className="min-w-[700px] flex-1 flex flex-col">
+          {/* Days of week header */}
+          <div
+            className="grid grid-cols-7 border-b"
+            style={{ background: "var(--ds-surface-2)", borderColor: "var(--ds-border)" }}
+          >
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div
               key={day}
@@ -358,6 +359,7 @@ export default function CalendarPage() {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
 

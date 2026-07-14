@@ -168,10 +168,10 @@ export default function RoadmapPage() {
   const dayPct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] gap-5 animate-slide-up">
+    <div className="flex flex-col md:flex-row h-auto md:h-[calc(100vh-8rem)] gap-5 animate-slide-up">
       {/* LEFT: Curriculum List */}
       <div
-        className="w-72 flex-shrink-0 flex flex-col overflow-hidden rounded-xl"
+        className="w-full md:w-72 flex-shrink-0 flex flex-col overflow-hidden rounded-xl max-h-[50vh] md:max-h-none md:h-full"
         style={{ background: "var(--surface-1)", border: "1px solid var(--border)" }}
       >
         {/* Header */}

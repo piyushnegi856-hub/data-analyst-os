@@ -224,7 +224,7 @@ export function DashboardClient({ stats: serverStats, weekResources }: Props) {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((kpi, i) => {
           const Icon = kpi.icon;
           return (
@@ -255,9 +255,9 @@ export function DashboardClient({ stats: serverStats, weekResources }: Props) {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="flex flex-col xl:flex-row gap-6">
         {/* Left: Charts */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="flex-1 space-y-6 min-w-0">
           <div className="widget-card">
             <GameProgression />
           </div>
@@ -294,8 +294,8 @@ export function DashboardClient({ stats: serverStats, weekResources }: Props) {
         </div>
 
         {/* Right: Side widgets */}
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-1 lg:gap-6">
+        <div className="space-y-6 xl:w-[340px] flex-shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-4 xl:gap-6">
             <div className="widget-card relative">
               <PomodoroTimer />
             </div>
