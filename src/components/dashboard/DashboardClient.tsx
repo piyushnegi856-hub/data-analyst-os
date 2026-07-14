@@ -111,7 +111,7 @@ export function DashboardClient({ stats: serverStats, weekResources }: Props) {
   }, []);
 
   return (
-    <div ref={container} className="space-y-6 pb-12 overflow-hidden">
+    <div ref={container} className="space-y-6 pb-12 overflow-hidden animate-slide-up">
       {/* Overview GSAP Animated Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 glass-card rounded-2xl relative overflow-hidden">
         <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full opacity-10" style={{ background: "var(--ds-primary)", filter: "blur(40px)" }} />
@@ -132,7 +132,7 @@ export function DashboardClient({ stats: serverStats, weekResources }: Props) {
             </div>
           )}
           <div>
-            <h1 className="section-heading text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <h1 className="section-heading text-2xl font-bold tracking-tight text-white flex items-center gap-2 shimmer-text">
               Welcome back, {profile.name}!
               <Sparkles className="w-5 h-5 text-[#4f6ef7] animate-pulse" />
             </h1>
@@ -157,17 +157,17 @@ export function DashboardClient({ stats: serverStats, weekResources }: Props) {
       </div>
 
       {/* Top KPI Cards (Bento style) */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
         {[
           { label: "Sprint Progress", value: `${stats.progressPct}%`, trend: `${stats.completedDaysCount} days complete` },
           { label: "Day Streak", value: `${stats.streak} Days`, trend: "Keep it up!" },
           { label: "Hours Logged", value: `${stats.hoursLogged}h`, trend: `${stats.logCount} study sessions` },
           { label: "XP Gained", value: (stats.completedDaysCount * 250 + stats.hoursLogged * 50).toLocaleString(), trend: "Level 3 Analyst" },
         ].map((kpi, i) => (
-          <div key={i} className="stat-block glass-card p-5 rounded-xl flex flex-col">
+          <div key={i} className="stat-block glass-card p-5 rounded-xl flex flex-col animate-count-up">
             <span className="text-sm font-medium" style={{ color: "var(--ds-text-muted)" }}>{kpi.label}</span>
             <span className="stat-value text-3xl font-bold mt-2 text-white">{kpi.value}</span>
-            <span className="text-xs font-medium mt-1 animate-pulse" style={{ color: "var(--ds-success)" }}>{kpi.trend}</span>
+            <span className="text-xs font-medium mt-1" style={{ color: "var(--ds-success)" }}>{kpi.trend}</span>
           </div>
         ))}
       </div>

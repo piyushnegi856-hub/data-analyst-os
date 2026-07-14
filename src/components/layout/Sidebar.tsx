@@ -62,7 +62,7 @@ export function Sidebar() {
   return (
     <aside
       style={{ background: "var(--ds-surface)" }}
-      className="w-64 flex-shrink-0 flex flex-col h-full border-r border-white/[0.06]"
+      className="w-64 flex-shrink-0 flex flex-col h-full border-r border-white/[0.06] animate-slide-up"
     >
       {/* ── Logo ── */}
       <div className="h-16 flex items-center px-5 border-b border-white/[0.06]">
@@ -112,7 +112,7 @@ export function Sidebar() {
         </div>
         <div className="h-1 rounded-full" style={{ background: "var(--ds-surface-3)" }}>
           <div
-            className="h-1 rounded-full transition-all duration-700"
+            className="h-1 rounded-full transition-all duration-700 animate-bar-fill"
             style={{
               width: `${progressPercent}%`,
               background: "linear-gradient(90deg, #4f6ef7, #7c3aed)",
@@ -161,7 +161,7 @@ export function Sidebar() {
                     {item.name}
                     {isActive && (
                       <div
-                        className="ml-auto w-1.5 h-1.5 rounded-full"
+                        className="ml-auto w-1.5 h-1.5 rounded-full animate-pulse-glow"
                         style={{ background: "var(--ds-primary)" }}
                       />
                     )}

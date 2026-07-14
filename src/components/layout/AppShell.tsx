@@ -24,14 +24,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col flex-1 overflow-hidden relative">
         <Topbar />
         <main className="flex-1 overflow-y-auto bg-transparent relative z-10">
-          <div className="h-full p-8 max-w-[1400px] mx-auto">
+          <div className="h-full p-8 max-w-[1400px] mx-auto animate-fade-in">
             {children}
           </div>
         </main>
-        
-        {/* Decorative background glow behind main content */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] opacity-[0.03] pointer-events-none z-0" 
-          style={{ background: "radial-gradient(ellipse at top, var(--ds-primary) 0%, transparent 70%)" }} 
+
+        {/* Ambient floating orbs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="orb orb-blue w-96 h-96 -top-20 -right-20" />
+          <div className="orb orb-purple w-80 h-80 bottom-10 -left-10" style={{ animationDelay: "-2s" }} />
+          <div className="orb orb-cyan w-64 h-64 top-1/2 right-1/4" style={{ animationDelay: "-4s" }} />
+        </div>
+
+        {/* Radial top glow */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] opacity-[0.06] pointer-events-none z-0"
+          style={{ background: "radial-gradient(ellipse at top, var(--ds-primary) 0%, transparent 70%)" }}
         />
       </div>
     </div>
