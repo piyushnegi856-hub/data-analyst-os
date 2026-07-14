@@ -146,6 +146,34 @@ export const RESOURCES: Resource[] = [
     topic: "Portfolio", type: "YouTube", week: 1,
     description: "End to end SQL data exploration project for your portfolio.",
     channel: "Alex The Analyst",
+  },
+  {
+    id: "cheat-1",
+    title: "SQL Basics Cheat Sheet",
+    url: "https://learnsql.com/blog/sql-basics-cheat-sheet/",
+    topic: "SQL", type: "Article", week: 1,
+    description: "A comprehensive printable cheat sheet containing all basic SQL functions and join syntax.",
+  },
+  {
+    id: "cheat-2",
+    title: "Pandas Cheat Sheet (Official)",
+    url: "https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf",
+    topic: "Python", type: "Article", week: 2,
+    description: "Official cheat sheet for data wrangling, cleaning, reshaping, and plotting in Pandas.",
+  },
+  {
+    id: "data-1",
+    title: "UCI Machine Learning Repository",
+    url: "https://archive.ics.uci.edu/datasets",
+    topic: "Portfolio", type: "Practice", week: 3,
+    description: "Hundreds of public datasets for cleaning, modeling, and business intelligence projects.",
+  },
+  {
+    id: "ai-1",
+    title: "SQL Query Optimizer GPT",
+    url: "https://chatgpt.com",
+    topic: "Interview", type: "Practice", week: 4,
+    description: "Prompt blueprint for using ChatGPT/Claude as a personal SQL query optimization coach.",
   }
 ];
 

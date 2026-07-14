@@ -1,16 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Briefcase, BookOpen, Users, Link as LinkIcon, MoreHorizontal, Plus } from "lucide-react";
+import { Briefcase, BookOpen, Users, Link as LinkIcon, MoreHorizontal } from "lucide-react";
 import { LoadingButton } from "@/components/ui/LoadingButton";
 
 export default function WorkLogPage() {
-  const [logs, setLogs] = useState([
+  const [logs, setLogs] = useState<Array<{ id: number, category: string, text: string, date: string, color: string }>>([]);
+  const [inputText, setInputText] = useState("");
+  const [category, setCategory] = useState("Application");
+  const [isPending, setIsPending] = useState(false);
+
+  const defaultLogs = [
     {
       id: 1,
       category: "Application",
       text: "Applied to 3 Data Analyst roles on LinkedIn (Flipkart, Myntra, Swiggy)",
       date: "Today at 10:30 AM",
-      icon: Briefcase,
       color: "text-blue-400 bg-blue-500/10 border-blue-500/20"
     },
     {
@@ -18,7 +22,6 @@ export default function WorkLogPage() {
       category: "Learning",
       text: "Completed Kaggle Pandas micro-course",
       date: "Yesterday at 4:15 PM",
-      icon: BookOpen,
       color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
     },
     {
@@ -26,7 +29,6 @@ export default function WorkLogPage() {
       category: "Networking",
       text: "Sent cold messages to 5 Sr. Data Analysts asking for coffee chats",
       date: "Yesterday at 2:00 PM",
-      icon: Users,
       color: "text-purple-400 bg-purple-500/10 border-purple-500/20"
     },
     {
@@ -34,40 +36,65 @@ export default function WorkLogPage() {
       category: "LinkedIn",
       text: "Posted about my latest SQL project analyzing Superstore sales",
       date: "Oct 12 at 9:00 AM",
-      icon: LinkIcon,
       color: "text-sky-400 bg-sky-500/10 border-sky-500/20"
     }
-  ]);
+  ];
 
-  const [inputText, setInputText] = useState("");
-  const [category, setCategory] = useState("Application");
-  const [isPending, setIsPending] = useState(false);
+  const loadLogs = () => {
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem("sprint_work_logs");
+      if (raw) {
+        try {
+          setLogs(JSON.parse(raw));
+          return;
+        } catch (e) {}
+      }
+      localStorage.setItem("sprint_work_logs", JSON.stringify(defaultLogs));
+      setLogs(defaultLogs);
+    }
+  };
+
+  useEffect(() => {
+    loadLogs();
+  }, []);
 
   const handleAdd = () => {
     if (!inputText) return;
     setIsPending(true);
     
     setTimeout(() => {
-      setLogs([{
+      const newLog = {
         id: Date.now(),
         category: category,
         text: inputText,
         date: "Just now",
-        icon: category === "Application" ? Briefcase : category === "Learning" ? BookOpen : category === "Networking" ? Users : LinkIcon,
         color: category === "Application" ? "text-blue-400 bg-blue-500/10 border-blue-500/20" : 
                category === "Learning" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" : 
                category === "Networking" ? "text-purple-400 bg-purple-500/10 border-purple-500/20" : "text-sky-400 bg-sky-500/10 border-sky-500/20"
-      }, ...logs]);
+      };
+      const nextLogs = [newLog, ...logs];
+      setLogs(nextLogs);
+      localStorage.setItem("sprint_work_logs", JSON.stringify(nextLogs));
       setInputText("");
       setIsPending(false);
+      window.dispatchEvent(new Event("storage"));
     }, 600);
+  };
+
+  const getIcon = (cat: string) => {
+    switch (cat) {
+      case "Application": return Briefcase;
+      case "Learning": return BookOpen;
+      case "Networking": return Users;
+      default: return LinkIcon;
+    }
   };
 
   return (
     <div className="max-w-3xl mx-auto pb-12">
       <div className="flex items-end justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--ds-text)" }}>Work Log</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white animate-fade-in">Work Log</h1>
           <p className="text-sm mt-1" style={{ color: "var(--ds-text-muted)" }}>Track your daily actions: learning, applications, and networking.</p>
         </div>
       </div>
@@ -104,7 +131,7 @@ export default function WorkLogPage() {
         {/* Feed */}
         <div className="divide-y" style={{ borderColor: "var(--ds-border)" }}>
           {logs.map((log) => {
-            const Icon = log.icon;
+            const Icon = getIcon(log.category);
             return (
               <div key={log.id} className="p-5 flex gap-4 transition-colors group hover:bg-[var(--ds-surface-2)]">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center border shrink-0 ${log.color}`}>
@@ -117,7 +144,7 @@ export default function WorkLogPage() {
                       <MoreHorizontal className="w-4 h-4 hover:text-[var(--ds-text)]" />
                     </button>
                   </div>
-                  <div className="flex items-center gap-3 mt-1.5">
+                  <div className="flex items-center gap-3 mt-1.5 animate-fade-in">
                     <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--ds-text-muted)" }}>{log.category}</span>
                     <span className="text-xs" style={{ color: "var(--ds-text-dim)" }}>• {log.date}</span>
                   </div>
