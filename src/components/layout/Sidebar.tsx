@@ -31,7 +31,7 @@ const navGroups = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const [userName, setUserName] = useState("Analyst");
   const [userInitials, setUserInitials] = useState("A");
@@ -88,6 +88,13 @@ export function Sidebar() {
             </span>
           </div>
         </div>
+        {onClose && (
+          <button onClick={onClose} className="md:hidden p-1.5 rounded-md hover:bg-white/10 text-white/50 hover:text-white">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Sprint Progress Block */}

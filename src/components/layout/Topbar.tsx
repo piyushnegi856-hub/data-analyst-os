@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { loadUserProfile } from "@/lib/curriculumStore";
 
-export function Topbar() {
+export function Topbar({ isMobile = false }: { isMobile?: boolean }) {
   const [userName, setUserName] = useState("Analyst");
   const [userInitials, setUserInitials] = useState("A");
   const [profileImage, setProfileImage] = useState("");
@@ -59,8 +59,10 @@ export function Topbar() {
   return (
     <>
       <header
-        className="h-[52px] flex-shrink-0 flex items-center justify-between px-5 z-20 sticky top-0"
-        style={{
+        className={`flex-shrink-0 flex items-center justify-between z-20 ${
+          isMobile ? "w-full" : "h-[52px] px-5 sticky top-0"
+        }`}
+        style={isMobile ? {} : {
           background: "rgba(9,11,14,0.85)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",

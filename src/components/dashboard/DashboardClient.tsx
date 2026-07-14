@@ -6,6 +6,7 @@ import { GameProgression } from "./GameProgression";
 import { ActivityHeatmap } from "./ActivityHeatmap";
 import { UpNext } from "./UpNext";
 import { PomodoroTimer } from "./PomodoroTimer";
+import { Pedometer } from "./Pedometer";
 import {
   loadUserProfile,
   loadAllDaysState,
@@ -294,8 +295,13 @@ export function DashboardClient({ stats: serverStats, weekResources }: Props) {
 
         {/* Right: Side widgets */}
         <div className="space-y-6">
-          <div className="widget-card relative">
-            <PomodoroTimer />
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-1 lg:gap-6">
+            <div className="widget-card relative">
+              <PomodoroTimer />
+            </div>
+            <div className="widget-card relative">
+              <Pedometer />
+            </div>
           </div>
           <div className="widget-card">
             <UpNext resources={weekResources} currentWeek={Math.ceil((stats.completedDaysCount + 1) / 7)} />
