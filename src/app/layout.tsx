@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/layout/AppShell";
+import { ThemeProvider } from "next-themes";
 
 // Body / reading text — Barlow at 400/500/600/700
 const barlow = Barlow({
@@ -39,9 +40,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${barlow.variable} ${barlowCondensed.variable} ${openSans.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full h-full flex flex-col m-0 p-0 overflow-hidden bg-[#0d0f14] text-[#e2e8f0]">
-        <AppShell>{children}</AppShell>
+      <body className="min-h-full h-full flex flex-col m-0 p-0 overflow-hidden text-foreground">
+        <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
+          <AppShell>{children}</AppShell>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,148 +1,189 @@
 "use client";
 import { useState, useEffect } from "react";
-import { User, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, Trash2, Award } from "lucide-react";
+import {
+  User, Image as ImageIcon, MessageSquare, Award, Trash2,
+  Save, CheckCircle2, AlertTriangle, ChevronRight, Palette, Bell
+} from "lucide-react";
 import { loadUserProfile, saveUserProfile, UserProfile } from "@/lib/curriculumStore";
+
+const TRACKS = [
+  { value: "SQL",     label: "SQL Foundations",             desc: "JOINs, CTEs, Window functions" },
+  { value: "Python",  label: "Python & Pandas",             desc: "Data wrangling, EDA, Matplotlib" },
+  { value: "Excel",   label: "Advanced Excel",              desc: "Pivot tables, Power Query, VBA" },
+  { value: "Power BI",label: "Data Visualisation (Power BI)",desc: "DAX, dashboards, storytelling" },
+  { value: "Stats",   label: "Statistics & A/B Testing",    desc: "Probability, hypothesis testing" },
+];
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<UserProfile>({
-    name: "Job Seeker",
-    welcomeMessage: "Let's crack the code!",
+    name: "",
+    welcomeMessage: "",
     profileImage: "",
-    focus: "SQL"
+    focus: "SQL",
   });
+  const [saved, setSaved] = useState(false);
+  const [resetConfirm, setResetConfirm] = useState(false);
 
-  const [savedSuccess, setSavedSuccess] = useState(false);
-
-  useEffect(() => {
-    setProfile(loadUserProfile());
-  }, []);
+  useEffect(() => { setProfile(loadUserProfile()); }, []);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     saveUserProfile(profile);
-    setSavedSuccess(true);
-    setTimeout(() => {
-      setSavedSuccess(false);
-      // Force refresh sidebar/topbar
-      window.location.reload();
-    }, 1000);
+    window.dispatchEvent(new Event("storage"));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
   };
 
   const handleReset = () => {
-    if (confirm("Are you sure you want to reset all sprint progress? This cannot be undone.")) {
-      localStorage.clear();
-      // Clear cookies
-      document.cookie = "sprint_started=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      document.cookie = "user_name=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      document.cookie = "sprint_focus=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      document.cookie = "sprint_start_date=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      
-      window.location.href = "/onboarding";
-    }
+    localStorage.clear();
+    ["sprint_started", "user_name", "sprint_focus", "sprint_start_date"].forEach((k) => {
+      document.cookie = `${k}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    });
+    window.location.href = "/onboarding";
   };
 
   return (
-    <div className="max-w-2xl mx-auto pb-12">
-      <div className="flex items-center gap-3 mb-8">
-        <SettingsIcon className="w-8 h-8 text-[#4f6ef7]" />
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--ds-text)" }}>Profile Settings</h1>
-          <p className="text-sm mt-1" style={{ color: "var(--ds-text-muted)" }}>Customize your OS profile and learning track.</p>
-        </div>
+    <div className="max-w-2xl mx-auto pb-12 animate-slide-up">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Settings</h1>
+        <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+          Customize your profile, track, and sprint preferences.
+        </p>
       </div>
 
-      <div className="glass-card rounded-2xl overflow-hidden p-6 space-y-6">
-        <form onSubmit={handleSave} className="space-y-5">
-          {/* Name */}
-          <div>
-            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--ds-text-muted)" }}>
-              <User className="w-3.5 h-3.5" /> Full Name
-            </label>
-            <input 
-              type="text" 
-              required
-              value={profile.name}
-              onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-              className="w-full px-3 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2"
-              style={{ background: "var(--ds-surface-2)", border: "1px solid var(--ds-border)", color: "var(--ds-text)" }}
-            />
+      {/* Profile Card */}
+      <form onSubmit={handleSave} className="space-y-4">
+        <div className="card p-6 space-y-5">
+          <div className="flex items-center gap-2 mb-1">
+            <User className="w-4 h-4" style={{ color: "var(--accent)" }} />
+            <h2 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>Profile</h2>
           </div>
 
-          {/* Welcome Message */}
-          <div>
-            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--ds-text-muted)" }}>
-              <MessageSquare className="w-3.5 h-3.5" /> Dashboard Welcome Message
-            </label>
-            <input 
-              type="text" 
-              required
-              value={profile.welcomeMessage}
-              onChange={(e) => setProfile({ ...profile, welcomeMessage: e.target.value })}
-              className="w-full px-3 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2"
-              style={{ background: "var(--ds-surface-2)", border: "1px solid var(--ds-border)", color: "var(--ds-text)" }}
-            />
-          </div>
-
-          {/* Profile Image URL */}
-          <div>
-            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--ds-text-muted)" }}>
-              <ImageIcon className="w-3.5 h-3.5" /> Custom Profile Image URL
-            </label>
-            <input 
-              type="url" 
-              value={profile.profileImage}
-              onChange={(e) => setProfile({ ...profile, profileImage: e.target.value })}
-              placeholder="https://images.unsplash.com/..."
-              className="w-full px-3 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2"
-              style={{ background: "var(--ds-surface-2)", border: "1px solid var(--ds-border)", color: "var(--ds-text)" }}
-            />
-            {profile.profileImage && (
-              <div className="mt-3 flex items-center gap-3 p-2 rounded-lg border" style={{ borderColor: "var(--ds-border)", background: "var(--ds-surface-2)" }}>
-                <img src={profile.profileImage} alt="Profile preview" className="w-10 h-10 rounded-full object-cover border" style={{ borderColor: "var(--ds-border)" }} />
-                <span className="text-xs" style={{ color: "var(--ds-text-muted)" }}>Avatar Preview</span>
+          {/* Avatar preview */}
+          {profile.profileImage && (
+            <div
+              className="flex items-center gap-3 p-3 rounded-xl"
+              style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
+            >
+              <img
+                src={profile.profileImage}
+                alt="Preview"
+                className="w-12 h-12 rounded-xl object-cover"
+                style={{ border: "2px solid var(--accent-border)" }}
+              />
+              <div>
+                <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{profile.name || "Your Name"}</p>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>Avatar preview</p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Specialization focus */}
-          <div>
-            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--ds-text-muted)" }}>
-              <Award className="w-3.5 h-3.5" /> Starting Track / Focus
-            </label>
-            <select
-              value={profile.focus}
-              onChange={(e) => setProfile({ ...profile, focus: e.target.value })}
-              className="w-full px-3 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2"
-              style={{ background: "var(--ds-surface-2)", border: "1px solid var(--ds-border)", color: "var(--ds-text)" }}
-            >
-              <option value="SQL">SQL Foundations</option>
-              <option value="Python">Python & Pandas</option>
-              <option value="Excel">Advanced Excel</option>
-              <option value="Tableau">Data Visualisation (Tableau/Power BI)</option>
-              <option value="Stats">Statistics & A/B Testing</option>
-            </select>
-          </div>
-
-          <div className="pt-2">
-            <button 
-              type="submit" 
-              className="btn-primary w-full justify-center py-3 text-base flex items-center gap-2"
-            >
-              {savedSuccess ? "Saved Successfully!" : "Save Profile"}
-            </button>
-          </div>
-        </form>
-
-        <div className="border-t pt-6" style={{ borderColor: "var(--ds-border)" }}>
-          <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--ds-text)" }}>Danger Zone</h3>
-          <p className="text-xs mb-4" style={{ color: "var(--ds-text-muted)" }}>Resetting will wipe all locally saved tasks, work logs, streak data, and evidence screenshots.</p>
-          <button 
-            onClick={handleReset} 
-            className="flex items-center gap-2 px-4 py-2 border border-red-500/30 bg-red-500/10 text-red-400 text-sm font-semibold rounded-lg hover:bg-red-500/20 transition-colors"
-          >
-            <Trash2 className="w-4 h-4" /> Reset 30-Day Sprint
-          </button>
+          {/* Fields */}
+          {[
+            { key: "name",           label: "Full Name",               placeholder: "Piyush Negi",                icon: User,         type: "text" },
+            { key: "welcomeMessage", label: "Dashboard Greeting",       placeholder: "Ready to crush SQL today?",  icon: MessageSquare, type: "text" },
+            { key: "profileImage",   label: "Avatar URL (optional)",   placeholder: "https://images.unsplash.com/...", icon: ImageIcon, type: "url" },
+          ].map(({ key, label, placeholder, icon: Icon, type }) => (
+            <div key={key}>
+              <label className="section-label block mb-1.5">{label}</label>
+              <div className="relative">
+                <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "var(--text-muted)" }} />
+                <input
+                  type={type}
+                  required={key === "name"}
+                  value={(profile as any)[key]}
+                  onChange={(e) => setProfile({ ...profile, [key]: e.target.value })}
+                  placeholder={placeholder}
+                  className="input text-sm pl-9"
+                />
+              </div>
+            </div>
+          ))}
         </div>
+
+        {/* Track Selection */}
+        <div className="card p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Award className="w-4 h-4" style={{ color: "var(--accent)" }} />
+            <h2 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>Focus Track</h2>
+          </div>
+          <div className="space-y-2">
+            {TRACKS.map((track) => {
+              const active = profile.focus === track.value;
+              return (
+                <button
+                  key={track.value}
+                  type="button"
+                  onClick={() => setProfile({ ...profile, focus: track.value })}
+                  className="w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-150 text-left"
+                  style={{
+                    background: active ? "var(--accent-subtle)" : "var(--surface-2)",
+                    border: `1px solid ${active ? "var(--accent-border)" : "var(--border)"}`,
+                  }}
+                >
+                  <div
+                    className="w-3 h-3 rounded-full flex-shrink-0 transition-all"
+                    style={{ background: active ? "var(--accent)" : "var(--border-strong)", boxShadow: active ? "0 0 8px var(--accent-glow)" : "none" }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold" style={{ color: active ? "var(--accent)" : "var(--text-primary)" }}>
+                      {track.label}
+                    </p>
+                    <p className="text-xs mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>{track.desc}</p>
+                  </div>
+                  {active && <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: "var(--accent)" }} />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Save button */}
+        <button
+          type="submit"
+          className="btn-primary w-full justify-center py-3 text-sm font-semibold flex items-center gap-2"
+          style={{ borderRadius: "var(--r-xl)" }}
+        >
+          {saved ? (
+            <>
+              <CheckCircle2 className="w-4 h-4" /> Saved Successfully!
+            </>
+          ) : (
+            <>
+              <Save className="w-4 h-4" /> Save Changes
+            </>
+          )}
+        </button>
+      </form>
+
+      {/* Danger Zone */}
+      <div
+        className="mt-6 p-5 rounded-xl"
+        style={{ background: "rgba(244,63,94,0.04)", border: "1px solid rgba(244,63,94,0.15)" }}
+      >
+        <div className="flex items-center gap-2 mb-2">
+          <AlertTriangle className="w-4 h-4" style={{ color: "var(--danger)" }} />
+          <h3 className="text-sm font-bold" style={{ color: "var(--danger)" }}>Danger Zone</h3>
+        </div>
+        <p className="text-xs mb-4 leading-relaxed" style={{ color: "var(--text-muted)" }}>
+          Resetting will permanently wipe all locally saved tasks, work logs, streak data, job applications, and evidence. This cannot be undone.
+        </p>
+
+        {!resetConfirm ? (
+          <button
+            onClick={() => setResetConfirm(true)}
+            className="btn-danger text-xs py-2 flex items-center gap-2"
+          >
+            <Trash2 className="w-3.5 h-3.5" /> Reset Sprint
+          </button>
+        ) : (
+          <div className="flex items-center gap-3">
+            <p className="text-xs font-semibold" style={{ color: "var(--danger)" }}>Are you sure?</p>
+            <button onClick={handleReset} className="btn-danger text-xs py-2 px-3">Yes, reset</button>
+            <button onClick={() => setResetConfirm(false)} className="btn-ghost text-xs py-2 px-3">Cancel</button>
+          </div>
+        )}
       </div>
     </div>
   );
