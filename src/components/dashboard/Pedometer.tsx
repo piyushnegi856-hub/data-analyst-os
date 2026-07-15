@@ -84,7 +84,7 @@ export function Pedometer() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Activity className="w-4 h-4" style={{ color: "var(--purple)" }} />
-          <h3 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>Walking Timer</h3>
+          <h3 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>Pedometer</h3>
         </div>
         <div className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full" style={{ background: "var(--purple-subtle)", color: "var(--purple)" }}>
           {totalWalkedToday}m Today
