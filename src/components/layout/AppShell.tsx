@@ -1,19 +1,12 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
-import { Menu, X } from "lucide-react";
+import { BottomNav } from "./BottomNav";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isOnboarding = pathname === "/onboarding";
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
 
   if (isOnboarding) {
     return (
@@ -25,37 +18,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--bg)" }}>
-      {/* Mobile overlay */}
-      {mobileMenuOpen && (
-        <div 
-          className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Sidebar with mobile transform */}
-      <div 
-        className={`fixed md:relative z-50 h-full transition-transform duration-300 ease-in-out ${
-          mobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
-      >
-        <Sidebar onClose={() => setMobileMenuOpen(false)} />
+      {/* Sidebar (Desktop only) */}
+      <div className="hidden md:flex flex-shrink-0 z-50 h-full">
+        <Sidebar />
       </div>
 
       <div className="flex flex-col flex-1 overflow-hidden relative w-full">
-        {/* Mobile Header with Hamburger */}
+        {/* Mobile Header (No hamburger, just search/profile) */}
         <div className="md:hidden flex items-center h-[52px] px-4 z-30 flex-shrink-0" style={{
           background: "rgba(9,11,14,0.85)",
           backdropFilter: "blur(16px)",
           borderBottom: "1px solid var(--border)",
         }}>
-          <button 
-            onClick={() => setMobileMenuOpen(true)}
-            className="p-1.5 rounded-md text-white/70 hover:bg-white/10 hover:text-white"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          <div className="flex-1" />
           <Topbar isMobile={true} />
         </div>
 
@@ -65,7 +39,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto relative z-10">
+        <main className="flex-1 overflow-y-auto relative z-10 pb-20 md:pb-0">
           <div className="h-full px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-8 max-w-[1440px] mx-auto animate-fade-in">
             {children}
           </div>
@@ -93,6 +67,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           style={{ background: "linear-gradient(90deg, transparent, var(--accent-border), transparent)" }}
         />
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }
