@@ -5,7 +5,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { GameProgression } from "./GameProgression";
 import { ActivityHeatmap } from "./ActivityHeatmap";
 import { UpNext } from "./UpNext";
-import { PomodoroTimer } from "./PomodoroTimer";
 import { Pedometer } from "./Pedometer";
 import {
   loadUserProfile,
@@ -296,9 +295,6 @@ export function DashboardClient({ stats: serverStats, weekResources }: Props) {
         {/* Right: Side widgets */}
         <div className="space-y-6 xl:w-[340px] flex-shrink-0">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-4 xl:gap-6">
-            <div className="widget-card relative">
-              <PomodoroTimer />
-            </div>
             <div className="widget-card relative">
               <Pedometer />
             </div>
